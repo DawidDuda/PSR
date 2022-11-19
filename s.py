@@ -1,7 +1,7 @@
 import os
 import subprocess
 import socket
-
+import psutil
 
 host='127.0.0.1'
 port = 4000
@@ -28,6 +28,13 @@ def snd_dwn():
             message = "0"
             server = (host,port)
             s.sendto(message.encode('utf-8'), server)
+ 
+
+def check_is_running(exe_name):
     
+    while(True):
+        stan = (exe_name in (i.name() for i in psutil.process_iter()))
+        if(stan == True):
+            print(exe_name + " działa")
 snd_dwn()
     
