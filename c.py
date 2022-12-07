@@ -1,34 +1,35 @@
+
+import threading
 import socket
 import os
-import subprocess
-import threading
-from tkinter import *
-from tkinter import ttk
+import shutil
 
-host='127.0.0.1'
-port = 4000
-
-server = (host, port)
+host='192.168.101.11' #client ip
+port = 4005
+server = ('192.168.101.10', 4000)
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.bind((host,port))
+   
+        
+def download_prog(message):
+    if(message !='q'):
+        try:
+            
+            
+            s.sendto(message.encode('utf-8'), server)
+            file = open("test.txt", 'wb')
+            data, addr = s.recvfrom(99999)
+        
+            file.write(bytes(data))
+            file.close()
+            print("odebrano")
+            
 
-def send_exe(s, exe_name):
-    file = open(exe_name, 'rb')
-    file_data = file.read(1024)
-    s.connect((host,port))
-    s.send(file_data)
+        except:
+            print("Brak połączenia")
+            
 
-class send_thread(threading.Thread):
-    def __init__(self,mess):
-        self.mess = mess
-    
-    def run(self):
-        send_exe(s, mess)
 
-def mess(message):
-    
-    s.sendto(message.encode('utf-8'), server)
-    #print(os.system('cmd /k "tescik.exe"'))
-    
-mess("dzialajj")
+download_prog("w")
 
-send_exe(s, "tescik.exe")
+
