@@ -1,40 +1,43 @@
+import socket
 import os
 import subprocess
-import socket
-import psutil
+import threading
+from tkinter import *
+from tkinter import ttk
 
-host='127.0.0.1'
+host = '192.168.101.10' #Server ip
 port = 4000
-    
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.bind((host,port))
-
-def download():
-    data, addr = s.recvfrom(1024)
-    data = data.decode('utf-8')
-    server = (host, port)
-    
-
-def snd_dwn():
-    data, addr = s.recvfrom(1024)
-    data = data.decode('utf-8')
-    print("message from: "+str(addr))
-    print("from conencted: "+data)
-    if(data == "tescik.exe"):
-        if(os.path.exists("tescik.exe")):
-           print(subprocess.check_output('tescik.exe', shell=True, text=True))
-        
-        else:
-            message = "0"
-            server = (host,port)
-            s.sendto(message.encode('utf-8'), server)
+s.bind((host, port))
  
+ 
+ 
+ 
+def snd_dwn(prog_name):
+ 
+    data, addr = s.recvfrom(1024)
+    data = data.decode('utf-8')
+    print("Message from: " + str(addr))
+    print("From connected user: " + data)      
 
-def check_is_running(exe_name):
+ 
+    print("Sending...")
+    file = open(prog_name, 'rb')
+    filedata = file.read(99999)
+    s.sendto(bytes(filedata), addr)
+ 
+ 
+ 
+class download(threading.Thread):
+    def __init__(self,prog_name):
+        threading.Thread.__init__(self)
+        self.prog_name = prog_name
+        
+    def run(self):
+        snd_dwn(self.prog_name)
+        print("Wys?ano")
     
-    while(True):
-        stan = (exe_name in (i.name() for i in psutil.process_iter()))
-        if(stan == True):
-            print(exe_name + " działa")
-snd_dwn()
+
+while True:
     
+    download("test.txt").start()
