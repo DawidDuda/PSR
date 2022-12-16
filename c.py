@@ -4,14 +4,14 @@ import socket
 import os
 import shutil
 
-host='192.168.101.11' #client ip
+host='192.168.101.156' #client ip
 port = 4005
 server = ('192.168.101.10', 4000)
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((host,port))
 
 def receive_req():
-    data, addr = s.recvfrom(9999999999)
+    data, addr = s.recvfrom(99999)
     data=data.decode('utf-8')
     if(data[0:4] == "run:"):
         print(data[0:3])
@@ -44,6 +44,8 @@ def download_prog(message):
 def execute(prog_name):
     print("execute")
     if(os.path.exists(prog_name)):
+        message = "ok"
+        s.sendto(message.encode('utf-8'), server)
         print("if")
     #       print(subprocess.check_output(prog_name, shell=True, text=True))
     #print(os.system('cmd /k "tescik.exe"'))
@@ -53,6 +55,6 @@ def execute(prog_name):
       #  if(os.path.exists(prog_name)):
      #          print(subprocess.check_output(prog_name, shell=True, text=True))
 
-execute("unt.py")
+receive_req()
 
 
