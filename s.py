@@ -6,7 +6,7 @@ import threading
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
-host = '192.168.101.10' #Server ip
+host = '127.0.0.1' #Server ip
 port = 4000
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((host, port))
@@ -14,7 +14,8 @@ s.bind((host, port))
 class data:
     filename = ""
 
-client = [('192.168.101.11', 4005),('192.168.101.156', 4005)]
+## zrobic wczytywanie z pliku konfiguracyjnego
+client = [('127.0.0.1', 4005),('192.168.101.156', 4005)]
 
 def send_request(prog_name, dstclient):
     
@@ -67,9 +68,10 @@ def print_c():
 
 def run_exe():
     for i in range(get_number_cli()):
-        send_exe("unt.py", client[i]).start()
+        send_exe(data.filename, client[i]).start()
 
 def get_filename():
+    point = 0
     for i in range(len(data.filename)):
         if(data.filename[i]=='/'):
             point = i+1
@@ -112,7 +114,6 @@ def MainWindow():
     label.pack()
     
     print_cli()
-    choose_file()
     get_filename()
     filename_lbl = tk.Label(master=frame2, text=data.filename)
     filename_lbl.pack()
@@ -123,16 +124,17 @@ def MainWindow():
                    width = 20)
     inputtxt.pack()
     
-    printButton = tk.Button(window,
-                        text = "Dodaj ip klienta", 
-                        command = add_btn)
-    printButton.pack()
+    
     
     runButton = tk.Button(window,
                         text = "uruchom zdalnie", 
                         command = run_exe)
     runButton.pack()
     
+    fileChoserButton = tk.Button(window,
+                        text = "Wybierz plik exe", 
+                        command = choose_file)
+    fileChoserButton.pack()
     #
     
     print("file"+data.filename)
